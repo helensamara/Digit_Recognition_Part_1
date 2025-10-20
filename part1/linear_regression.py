@@ -1,6 +1,6 @@
 import numpy as np
 
-### Functions for you to fill in ###
+### Closed form Ridge Regression (L2 regularization) ###
 
 def closed_form(X, Y, lambda_factor):
     """
@@ -15,10 +15,14 @@ def closed_form(X, Y, lambda_factor):
         theta - (d + 1, ) NumPy array containing the weights of linear regression. Note that theta[0]
         represents the y-axis intercept of the model and therefore X[0] = 1
     """
-    # YOUR CODE HERE
-    raise NotImplementedError
+    n, d_plus_1 = X.shape 
+    I = np.identity(d_plus_1)
+    
+    first_term = np.matmul(X.T, X) + lambda_factor*I
+    theta = np.matmul(np.linalg.inv(first_term) , np.matmul(X.T, Y))
+    return theta
 
-### Functions which are already complete, for you to use ###
+### Functions which were already complete###
 
 def compute_test_error_linear(test_x, Y, theta):
     test_y_predict = np.round(np.dot(test_x, theta))
