@@ -119,8 +119,6 @@ print('softmax test_error=', run_softmax_on_MNIST(temp_parameter=1))
 # 6. Changing Labels
 #######################################################################
 
-
-
 def run_softmax_on_MNIST_mod3(temp_parameter=1):
     """
     Trains Softmax regression on digit (mod 3) classifications.
