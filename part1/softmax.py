@@ -31,8 +31,23 @@ def compute_probabilities(X, theta, temp_parameter):
     Returns:
         H - (k, n) NumPy array, where each entry H[j][i] is the probability that X[i] is labeled as j
     """
-    #YOUR CODE HERE
-    raise NotImplementedError
+    # data points are rows of the matrix X: X[i:] 
+    # number of rows is X.shape[0]
+    
+    # Compute the matrix of thetaj*xi (rows de j dot rows de X) 
+    # theta is (k,d), Xtranspose is (d,n), o resultado é uma matriz (k,n)
+    M = np.matmul(theta, np.transpose(X))/ temp_parameter
+    
+    # c is a vector: 1xn -- um c pra cada row -- axis=0 rows
+    c = np.max(M, axis = 0)
+    
+    # Compute H matrix
+    H = np.exp(M - c)
+    
+    # Divide H by the normalizing term
+    H = H/np.sum(H, axis = 0)
+    
+    return H  
 
 def compute_cost_function(X, Y, theta, lambda_factor, temp_parameter):
     """
@@ -50,8 +65,27 @@ def compute_cost_function(X, Y, theta, lambda_factor, temp_parameter):
     Returns
         c - the cost value (scalar)
     """
-    #YOUR CODE HERE
-    raise NotImplementedError
+
+    k = theta.shape[0]
+    n = X.shape[0]
+    
+    ## Clip prob matrix to avoid NaN instances
+    #clip_prob_matrix = np.clip(compute_probabilities(X, theta, temp_parameter), 1e-15, 1-1e-15)
+    #
+    ## Take the log of the matrix of probabilities
+    #log_clip_matrix = np.log(clip_prob_matrix)
+    #
+    # Create a sparse matrix of [[y(i) == j]]
+    M = sparse.coo_matrix(([1]*n, (Y, range(n))), shape = (k,n)).toarray()
+    #
+    # Only add terms of log(matrix of prob) where M == 1
+    H = np.log(compute_probabilities(X, theta, temp_parameter))
+    sum1 = np.sum(H[M == 1])    
+    #            
+    # sum2
+    sum2 = np.linalg.norm(theta)**2
+    #
+    return (-1/n)*sum1 + (lambda_factor/2)*sum2
 
 def run_gradient_descent_iteration(X, Y, theta, alpha, lambda_factor, temp_parameter):
     """
@@ -70,8 +104,25 @@ def run_gradient_descent_iteration(X, Y, theta, alpha, lambda_factor, temp_param
     Returns:
         theta - (k, d) NumPy array that is the final value of parameters theta
     """
-    #YOUR CODE HERE
-    raise NotImplementedError
+    # Get number of labels
+    k = theta.shape[0]
+    
+    # Get number of examples
+    n = X.shape[0]
+    
+    # Create spare matrix of [[y(i) == j]]
+    M = sparse.coo_matrix(([1]*n, (Y, range(n))), shape=(k,n)).toarray()
+    
+    # Matrix of Probabilities
+    P = compute_probabilities(X, theta, temp_parameter)
+    
+    # Gradient matrix of theta #@ is matmul
+    grad_theta = (-1/(temp_parameter*n))*(np.matmul((M - P),X)) + lambda_factor*theta
+    
+    # Gradient descent update of theta matrix
+    theta = theta - alpha * grad_theta
+    
+    return theta
 
 def update_y(train_y, test_y):
     """
