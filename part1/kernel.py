@@ -1,9 +1,5 @@
 import numpy as np
 
-### Functions for you to fill in ###
-
-
-
 def polynomial_kernel(X, Y, c, p):
     """
         Compute the polynomial kernel between two matrices X and Y::
@@ -19,8 +15,7 @@ def polynomial_kernel(X, Y, c, p):
         Returns:
             kernel_matrix - (n, m) Numpy array containing the kernel matrix
     """
-    # YOUR CODE HERE
-    raise NotImplementedError
+    return (np.matmul(X, np.transpose(Y))+c)**p
 
 
 
@@ -38,5 +33,10 @@ def rbf_kernel(X, Y, gamma):
         Returns:
             kernel_matrix - (n, m) Numpy array containing the kernel matrix
     """
-    # YOUR CODE HERE
-    raise NotImplementedError
+    n=len(X)
+    m=len(Y)
+    K = np.empty((n,m))
+    for i in range(n):
+        for j in range(m):
+            K[i,j] = np.exp(-gamma * np.linalg.norm(X[i] - Y[j])**2)
+    return K

@@ -1,6 +1,6 @@
 import numpy as np
 
-### Closed form Ridge Regression (L2 regularization) ###
+#Closed form Ridge Regression (L2 regularization)#
 
 def closed_form(X, Y, lambda_factor):
     """
@@ -22,7 +22,7 @@ def closed_form(X, Y, lambda_factor):
     theta = np.matmul(np.linalg.inv(first_term) , np.matmul(X.T, Y))
     return theta
 
-### Functions which were already complete###
+#Functions which were already completed#
 
 def compute_test_error_linear(test_x, Y, theta):
     test_y_predict = np.round(np.dot(test_x, theta))

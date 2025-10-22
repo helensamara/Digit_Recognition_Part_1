@@ -112,9 +112,6 @@ def run_softmax_on_MNIST(temp_parameter=1):
 
 print('softmax test_error=', run_softmax_on_MNIST(temp_parameter=1))
 
-# TODO: Find the error rate for temp_parameter = [.5, 1.0, 2.0]
-#      Remember to return the tempParameter to 1, and re-run run_softmax_on_MNIST
-
 #######################################################################
 # 6. Changing Labels
 #######################################################################
@@ -125,11 +122,27 @@ def run_softmax_on_MNIST_mod3(temp_parameter=1):
 
     See run_softmax_on_MNIST for more info.
     """
-    # YOUR CODE HERE
-    raise NotImplementedError
+    # same as run_softmax_on_MNIST:
+    train_x, train_y, test_x, test_y = get_MNIST_data()
 
+    
+    train_y_mod3, test_y_mod3 = update_y(train_y, test_y)
+    theta, cost_function_history = softmax_regression(
+        train_x, train_y_mod3,
+        temp_parameter=temp_parameter,
+        alpha=0.3,
+        lambda_factor=1e-4,
+        k=3,
+        num_iterations=150
+    )
+    # almost the same as run_softmax_on_MNIST: except k=3  and train_y_mod3 
 
-# TODO: Run run_softmax_on_MNIST_mod3(), report the error rate
+    plot_cost_function_over_time(cost_function_history)
+
+    test_error_mod3 = compute_test_error_mod3(test_x, test_y_mod3, theta, temp_parameter)
+    print("softmax mod3 retrained test_error =", test_error_mod3)
+
+    return test_error_mod3
 
 
 #######################################################################
